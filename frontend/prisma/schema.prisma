@@ -1,0 +1,161 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Kelas {
+  id_kelas     Int            @id @default(autoincrement())
+  jurusan      String         @db.VarChar(100)
+  kelas        String         @db.VarChar(50)
+  absensi      Absensi[]
+  guru         Guru[]
+  mapel_diampu Mapel_Diampu[]
+  siswa        Siswa[]
+
+  @@index([id_kelas], map: "ix_kelas_id_kelas")
+  @@map("kelas")
+}
+
+model Siswa {
+  id_siswa      Int            @id @default(autoincrement())
+  id_kelas      Int?
+  nisn          String?        @unique(map: "ix_siswa_nisn") @db.VarChar(20)
+  nama          String         @db.VarChar(100)
+  jenis_kelamin jk_siswa_enum?
+  alamat        String?
+  no_hp         String?        @db.VarChar(15)
+  tanggal_lahir DateTime?      @db.Date
+  absensi       Absensi[]
+  nilai         Nilai[]
+  pengguna      Pengguna?
+  kelas         Kelas?         @relation(fields: [id_kelas], references: [id_kelas], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([id_siswa], map: "ix_siswa_id_siswa")
+  @@map("siswa")
+}
+
+model Guru {
+  id_guru       Int            @id @default(autoincrement())
+  nip           String?        @unique(map: "ix_guru_nip") @db.VarChar(30)
+  nama          String         @db.VarChar(100)
+  jenis_kelamin jk_guru_enum
+  email         String?        @unique(map: "ix_guru_email") @db.VarChar(100)
+  no_hp         String?        @db.VarChar(15)
+  id_kelas      Int?
+  berita        Berita[]
+  kelas         Kelas?         @relation(fields: [id_kelas], references: [id_kelas], onDelete: NoAction, onUpdate: NoAction)
+  mapel_diampu  Mapel_Diampu[]
+  pengguna      Pengguna?
+
+  @@index([id_guru], map: "ix_guru_id_guru")
+  @@map("guru")
+}
+
+model Mata_Pelajaran {
+  id_mapel     Int                  @id @default(autoincrement())
+  nama_mapel   String               @db.VarChar(100)
+  kategori     kategori_mapel_enum?
+  mapel_diampu Mapel_Diampu[]
+  nilai        Nilai[]
+
+  @@index([id_mapel], map: "ix_mata_pelajaran_id_mapel")
+  @@map("mata_pelajaran")
+}
+
+model Mapel_Diampu {
+  id_ampu  Int             @id @default(autoincrement())
+  id_guru  Int?
+  id_kelas Int?
+  id_mapel Int?
+  guru     Guru?           @relation(fields: [id_guru], references: [id_guru], onDelete: NoAction, onUpdate: NoAction)
+  kelas    Kelas?          @relation(fields: [id_kelas], references: [id_kelas], onDelete: NoAction, onUpdate: NoAction)
+  mapel    Mata_Pelajaran? @relation(fields: [id_mapel], references: [id_mapel], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([id_ampu], map: "ix_mapel_diampu_id_ampu")
+  @@map("mapel_diampu")
+}
+
+model Nilai {
+  id_nilai    Int             @id @default(autoincrement())
+  id_siswa    Int?
+  id_mapel    Int?
+  nilai_uts   Int?
+  nilai_uas   Int?
+  nilai_akhir Int?
+  mapel       Mata_Pelajaran? @relation(fields: [id_mapel], references: [id_mapel], onDelete: NoAction, onUpdate: NoAction)
+  siswa       Siswa?          @relation(fields: [id_siswa], references: [id_siswa], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([id_nilai], map: "ix_nilai_id_nilai")
+  @@map("nilai")
+}
+
+model Absensi {
+  id_absensi Int                  @id @default(autoincrement())
+  id_siswa   Int?
+  id_kelas   Int?
+  tanggal    DateTime?            @db.Date
+  status     status_absensi_enum?
+  kelas      Kelas?               @relation(fields: [id_kelas], references: [id_kelas], onDelete: NoAction, onUpdate: NoAction)
+  siswa      Siswa?               @relation(fields: [id_siswa], references: [id_siswa], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([id_absensi], map: "ix_absensi_id_absensi")
+  @@map("absensi")
+}
+
+model Berita {
+  id_berita    Int       @id @default(autoincrement())
+  id_guru      Int?
+  judul        String?   @db.VarChar(150)
+  isi          String?
+  tanggal_post DateTime? @default(now()) @db.Timestamp(6)
+  guru         Guru?     @relation(fields: [id_guru], references: [id_guru], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([id_berita], map: "ix_berita_id_berita")
+  @@map("berita")
+}
+
+model Pengguna {
+  id_user  Int       @id @default(autoincrement())
+  id_guru  Int?      @unique
+  id_siswa Int?      @unique
+  username String?   @unique(map: "ix_pengguna_username") @db.VarChar(50)
+  password String    @db.VarChar(255)
+  role     role_enum
+  guru     Guru?     @relation(fields: [id_guru], references: [id_guru], onDelete: NoAction, onUpdate: NoAction)
+  siswa    Siswa?    @relation(fields: [id_siswa], references: [id_siswa], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([id_user], map: "ix_pengguna_id_user")
+  @@map("pengguna")
+}
+
+enum jk_guru_enum {
+  Laki_laki @map("Laki-laki")
+  Perempuan
+}
+
+enum jk_siswa_enum {
+  Laki_laki @map("Laki-laki")
+  Perempuan
+}
+
+enum kategori_mapel_enum {
+  Umum
+  Produktif
+}
+
+enum role_enum {
+  Admin
+  Guru
+  Siswa
+}
+
+enum status_absensi_enum {
+  Hadir
+  Izin
+  Sakit
+  Alpa
+}
