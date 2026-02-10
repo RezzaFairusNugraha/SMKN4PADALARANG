@@ -47,7 +47,7 @@ class MataPelajaran(Base):
     __tablename__ = "mata_pelajaran"
     id_mapel = Column(Integer, primary_key=True, index=True)
     nama_mapel = Column(String(100), nullable=False)
-    kategori = Column(Enum('Umum', 'Produktif', name='kategori_mapel_enum'))
+    kategori = Column(Enum('Umum', 'Kejuruan', name='kategori_mapel_enum'))
 
     mapel_diampu = relationship("MapelDiampu", back_populates="mapel")
     nilai = relationship("Nilai", back_populates="mapel")

@@ -9,7 +9,7 @@ class JenisKelaminEnum(str, Enum):
 
 class KategoriMapelEnum(str, Enum):
     Umum = "Umum"
-    Produktif = "Produktif"
+    Kejuruan = "Kejuruan"
 
 # KELAS
 class KelasBase(BaseModel):
