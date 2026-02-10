@@ -93,7 +93,7 @@ export default function KelasPage() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["kelas"] });
-            toast.success("Kelas baru berhasil ditambahkan! 🚀");
+            toast.success("Kelas baru berhasil ditambahkan!");
             setIsAddOpen(false);
             setFormData({ kelas: "", jurusan: "" });
         },
@@ -108,7 +108,7 @@ export default function KelasPage() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["kelas"] });
-            toast.success("Data kelas berhasil diperbarui! 📝");
+            toast.success("Data kelas berhasil diperbarui!");
             setIsEditOpen(false);
             setEditingKelas(null);
         },

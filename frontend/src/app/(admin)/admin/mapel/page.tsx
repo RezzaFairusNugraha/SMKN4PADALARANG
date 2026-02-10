@@ -78,7 +78,7 @@ export default function MapelPage() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["mapel"] });
-            toast.success("Mata pelajaran baru ditambahkan! 📚");
+            toast.success("Mata pelajaran baru ditambahkan!");
             setIsAddOpen(false);
             setFormData({ nama_mapel: "", kategori: "Umum" });
         },
@@ -93,7 +93,7 @@ export default function MapelPage() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["mapel"] });
-            toast.success("Mata pelajaran berhasil diperbarui! 📝");
+            toast.success("Mata pelajaran berhasil diperbarui! ");
             setIsEditOpen(false);
             setEditingMapel(null);
         },

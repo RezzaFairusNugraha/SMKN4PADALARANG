@@ -99,7 +99,7 @@ export default function GuruPage() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["guru"] });
-            toast.success("Guru baru berhasil ditambahkan! 🎓");
+            toast.success("Guru baru berhasil ditambahkan!");
             setIsAddOpen(false);
             setFormData({
                 nip: "",
@@ -122,7 +122,7 @@ export default function GuruPage() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["guru"] });
-            toast.success("Data guru berhasil diperbarui! 📝");
+            toast.success("Data guru berhasil diperbarui!");
             setIsEditOpen(false);
             setEditingGuru(null);
         },

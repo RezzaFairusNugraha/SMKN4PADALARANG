@@ -52,7 +52,7 @@ export default function GuruNilaiPage() {
             // We don't necessarily need to invalidate immediately if we updated local state, 
             // but it's good practice to ensure sync.
             queryClient.invalidateQueries({ queryKey: ["guru-teaching-data"] });
-            toast.success("Nilai berhasil disimpan! 🎯");
+            toast.success("Nilai berhasil disimpan!");
         },
         onError: (error: any) => {
             toast.error(error.response?.data?.detail || "Gagal menyimpan nilai.");

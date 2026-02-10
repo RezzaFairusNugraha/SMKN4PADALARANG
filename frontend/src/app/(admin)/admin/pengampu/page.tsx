@@ -95,7 +95,7 @@ export default function PengampuPage() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["mapel-diampu"] });
-            toast.success("Pengampu berhasil ditambahkan! 🔗");
+            toast.success("Pengampu berhasil ditambahkan!");
             setIsAddOpen(false);
             setSelectedGuru("");
             setSelectedMapel("");
@@ -112,7 +112,7 @@ export default function PengampuPage() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["mapel-diampu"] });
-            toast.success("Pengampu berhasil diperbarui! 📝");
+            toast.success("Pengampu berhasil diperbarui!");
             setIsEditOpen(false);
             setEditingAssignment(null);
             setSelectedGuru("");
@@ -130,7 +130,7 @@ export default function PengampuPage() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["mapel-diampu"] });
-            toast.success("Penugasan berhasil dihapus! 🗑️");
+            toast.success("Penugasan berhasil dihapus!");
             setDeleteId(null);
         },
         onError: (error: any) => {
@@ -141,7 +141,7 @@ export default function PengampuPage() {
 
     const handleCreate = () => {
         if (!selectedGuru || !selectedMapel || !selectedKelas) {
-            toast.error("Semua data (Guru, Mapel, Kelas) wajib dipilih! ⚠️");
+            toast.error("Semua data (Guru, Mapel, Kelas) wajib dipilih!");
             return;
         }
 
@@ -171,7 +171,7 @@ export default function PengampuPage() {
 
     const handleUpdate = () => {
         if (!selectedGuru || !selectedMapel || !selectedKelas || !editingAssignment) {
-            toast.error("Semua data (Guru, Mapel, Kelas) wajib dipilih! ⚠️");
+            toast.error("Semua data (Guru, Mapel, Kelas) wajib dipilih!");
             return;
         }
 

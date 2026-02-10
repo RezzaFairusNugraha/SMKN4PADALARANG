@@ -94,7 +94,7 @@ export default function SiswaPage() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["siswa"] });
-            toast.success("Siswa baru berhasil didaftarkan! 🎒");
+            toast.success("Siswa baru berhasil didaftarkan!");
             setIsAddOpen(false);
             setFormData({
                 nisn: "",
@@ -117,7 +117,7 @@ export default function SiswaPage() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["siswa"] });
-            toast.success("Data siswa berhasil diperbarui! 📝");
+            toast.success("Data siswa berhasil diperbarui!");
             setIsEditOpen(false);
             setEditingSiswa(null);
         },

@@ -55,7 +55,7 @@ export default function GuruBeritaPage() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["all-berita"] });
-            toast.success("Berita berhasil dipublikasikan! 📰");
+            toast.success("Berita berhasil dipublikasikan!");
             setIsAddOpen(false);
             resetForm();
         },
@@ -72,7 +72,7 @@ export default function GuruBeritaPage() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["all-berita"] });
-            toast.success("Berita berhasil diperbarui! ✏️");
+            toast.success("Berita berhasil diperbarui!");
             setIsEditOpen(false);
             resetForm();
         },
@@ -87,7 +87,7 @@ export default function GuruBeritaPage() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["all-berita"] });
-            toast.success("Berita berhasil dihapus! 🗑️");
+            toast.success("Berita berhasil dihapus!");
             setDeleteId(null);
         },
         onError: (error: any) => {
