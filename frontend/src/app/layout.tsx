@@ -8,30 +8,30 @@ import Providers from "./providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "SMKN 4 Padalarang - Sistem Informasi Akademik",
-    description: "Sistem Informasi Akademik Terpadu SMKN 4 Padalarang (KBB)",
+  title: "SMKN 4 Padalarang - Sistem Informasi Akademik",
+  description: "Sistem Informasi Akademik Terpadu SMKN 4 Padalarang (KBB)",
 };
 
 export default function RootLayout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-    return (
-        <html lang="en" suppressHydrationWarning>
-            <body className={inter.className}>
-                <Providers>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="system"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
-                        {children}
-                        <Toaster position="top-center" richColors />
-                    </ThemeProvider>
-                </Providers>
-            </body>
-        </html>
-    );
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
+        <Providers>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster position="top-center" richColors />
+          </ThemeProvider>
+        </Providers>
+      </body>
+    </html>
+  );
 }
