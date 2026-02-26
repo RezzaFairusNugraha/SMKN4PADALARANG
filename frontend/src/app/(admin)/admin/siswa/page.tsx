@@ -22,8 +22,11 @@ import {
     GraduationCap,
     Clock,
     Shield,
-    AlertCircle
+    AlertCircle,
+    FileDown,
+    FileSpreadsheet
 } from "lucide-react";
+import { exportToPDF, exportToExcel } from "@/lib/export-utils";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -185,13 +188,55 @@ export default function SiswaPage() {
                         <p className="text-muted-foreground font-medium">Manajemen data siswa seluruh angkatan.</p>
                     </div>
 
-                    <Button
-                        onClick={() => setIsAddOpen(true)}
-                        className="rounded-xl font-bold shadow-lg shadow-primary/20 gap-2 h-12 px-6 active:scale-95 transition-transform"
-                    >
-                        <Plus className="h-5 w-5" />
-                        Tambah Siswa
-                    </Button>
+                    <div className="flex flex-wrap gap-2">
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                const columns = ["No", "Nama", "NISN", "Jenis Kelamin", "Kelas", "Alamat", "No HP"];
+                                const rows = (filteredSiswa || []).map((s: any, i: number) => [
+                                    i + 1,
+                                    s.nama,
+                                    s.nisn,
+                                    s.jenis_kelamin,
+                                    kelas?.find((k: any) => k.id_kelas === s.id_kelas)?.kelas || "-",
+                                    s.alamat || "-",
+                                    s.no_hp || "-"
+                                ]);
+                                exportToPDF(columns, rows, "Daftar Siswa", "Data-Siswa");
+                            }}
+                            className="rounded-xl font-bold gap-2 h-12 px-5 border-primary/20 hover:bg-red-500/5 hover:border-red-500/30 hover:text-red-500 transition-all"
+                        >
+                            <FileDown className="h-4 w-4" />
+                            PDF
+                        </Button>
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                const headers = ["No", "Nama", "NISN", "Jenis Kelamin", "Kelas", "Alamat", "No HP"];
+                                const rows = (filteredSiswa || []).map((s: any, i: number) => [
+                                    i + 1,
+                                    s.nama,
+                                    s.nisn,
+                                    s.jenis_kelamin,
+                                    kelas?.find((k: any) => k.id_kelas === s.id_kelas)?.kelas || "-",
+                                    s.alamat || "-",
+                                    s.no_hp || "-"
+                                ]);
+                                exportToExcel(headers, rows, "Data-Siswa", "Data Siswa");
+                            }}
+                            className="rounded-xl font-bold gap-2 h-12 px-5 border-primary/20 hover:bg-green-500/5 hover:border-green-500/30 hover:text-green-500 transition-all"
+                        >
+                            <FileSpreadsheet className="h-4 w-4" />
+                            Excel
+                        </Button>
+                        <Button
+                            onClick={() => setIsAddOpen(true)}
+                            className="rounded-xl font-bold shadow-lg shadow-primary/20 gap-2 h-12 px-6 active:scale-95 transition-transform"
+                        >
+                            <Plus className="h-5 w-5" />
+                            Tambah Siswa
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Filters */}

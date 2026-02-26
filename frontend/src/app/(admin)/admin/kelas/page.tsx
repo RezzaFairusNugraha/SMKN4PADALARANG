@@ -22,8 +22,11 @@ import {
     Building2,
     Shield,
     Clock,
-    AlertCircle
+    AlertCircle,
+    FileDown,
+    FileSpreadsheet
 } from "lucide-react";
+import { exportToPDF, exportToExcel } from "@/lib/export-utils";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -168,13 +171,51 @@ export default function KelasPage() {
                         <p className="text-muted-foreground font-medium">Manajemen rombongan belajar dan jurusan.</p>
                     </div>
 
-                    <Button
-                        onClick={() => setIsAddOpen(true)}
-                        className="rounded-xl font-bold shadow-lg shadow-primary/20 gap-2 h-12 px-6 active:scale-95 transition-transform"
-                    >
-                        <Plus className="h-5 w-5" />
-                        Tambah Kelas
-                    </Button>
+                    <div className="flex flex-wrap gap-2">
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                const columns = ["No", "Nama Kelas", "Jurusan", "Total Siswa", "Wali Kelas"];
+                                const rows = (filteredKelas || []).map((k: any, i: number) => [
+                                    i + 1,
+                                    k.kelas,
+                                    k.jurusan,
+                                    allSiswa?.filter((s: any) => s.id_kelas === k.id_kelas).length || 0,
+                                    allGuru?.find((g: any) => g.id_kelas === k.id_kelas)?.nama || "Belum ditentukan"
+                                ]);
+                                exportToPDF(columns, rows, "Daftar Kelas", "Data-Kelas");
+                            }}
+                            className="rounded-xl font-bold gap-2 h-12 px-5 border-primary/20 hover:bg-red-500/5 hover:border-red-500/30 hover:text-red-500 transition-all"
+                        >
+                            <FileDown className="h-4 w-4" />
+                            PDF
+                        </Button>
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                const headers = ["No", "Nama Kelas", "Jurusan", "Total Siswa", "Wali Kelas"];
+                                const rows = (filteredKelas || []).map((k: any, i: number) => [
+                                    i + 1,
+                                    k.kelas,
+                                    k.jurusan,
+                                    allSiswa?.filter((s: any) => s.id_kelas === k.id_kelas).length || 0,
+                                    allGuru?.find((g: any) => g.id_kelas === k.id_kelas)?.nama || "Belum ditentukan"
+                                ]);
+                                exportToExcel(headers, rows, "Data-Kelas", "Data Kelas");
+                            }}
+                            className="rounded-xl font-bold gap-2 h-12 px-5 border-primary/20 hover:bg-green-500/5 hover:border-green-500/30 hover:text-green-500 transition-all"
+                        >
+                            <FileSpreadsheet className="h-4 w-4" />
+                            Excel
+                        </Button>
+                        <Button
+                            onClick={() => setIsAddOpen(true)}
+                            className="rounded-xl font-bold shadow-lg shadow-primary/20 gap-2 h-12 px-6 active:scale-95 transition-transform"
+                        >
+                            <Plus className="h-5 w-5" />
+                            Tambah Kelas
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Filters */}

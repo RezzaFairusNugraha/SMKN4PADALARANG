@@ -1,12 +1,14 @@
 "use client";
 
 import DashboardLayout from "@/components/dashboard-layout";
-import { BookOpen, Loader2, Award, TrendingUp, BookCheck, ScrollText } from "lucide-react";
+import { BookOpen, Loader2, Award, TrendingUp, BookCheck, ScrollText, FileDown, FileSpreadsheet } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { exportToPDF, exportToExcel } from "@/lib/export-utils";
 
 export default function SiswaNilaiPage() {
     const { data: nilaiData, isLoading } = useQuery({
@@ -78,6 +80,56 @@ export default function SiswaNilaiPage() {
                                 <p className="text-3xl font-black tabular-nums text-foreground">{nilaiData?.length || 0}</p>
                             </div>
                         </div>
+                        {nilaiData && nilaiData.length > 0 && (
+                            <>
+                                <Button
+                                    variant="outline"
+                                    onClick={() => {
+                                        const columns = ["No", "Mata Pelajaran", "Kategori", "Nilai UTS", "Nilai UAS", "Nilai Akhir", "Status"];
+                                        const rows = nilaiData.map((item: any, i: number) => [
+                                            i + 1,
+                                            item.mapel?.nama_mapel || "-",
+                                            item.mapel?.kategori || "Umum",
+                                            item.nilai_uts || 0,
+                                            item.nilai_uas || 0,
+                                            item.nilai_akhir || 0,
+                                            item.nilai_akhir >= 75 ? "Lulus" : "Tidak Lulus"
+                                        ]);
+                                        exportToPDF(columns, rows, "Laporan Nilai Siswa", "Rapor-Nilai-Saya");
+                                    }}
+                                    className="p-4 rounded-3xl h-auto flex items-center gap-4 px-6 bg-card border border-border shadow-sm hover:bg-red-500/5 hover:border-red-500/30 hover:text-red-500 transition-all"
+                                >
+                                    <FileDown className="h-6 w-6 opacity-60" />
+                                    <div className="text-left">
+                                        <p className="text-[10px] font-black uppercase tracking-widest opacity-80">Export</p>
+                                        <p className="text-sm font-black">PDF</p>
+                                    </div>
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    onClick={() => {
+                                        const headers = ["No", "Mata Pelajaran", "Kategori", "Nilai UTS", "Nilai UAS", "Nilai Akhir", "Status"];
+                                        const rows = nilaiData.map((item: any, i: number) => [
+                                            i + 1,
+                                            item.mapel?.nama_mapel || "-",
+                                            item.mapel?.kategori || "Umum",
+                                            item.nilai_uts || 0,
+                                            item.nilai_uas || 0,
+                                            item.nilai_akhir || 0,
+                                            item.nilai_akhir >= 75 ? "Lulus" : "Tidak Lulus"
+                                        ]);
+                                        exportToExcel(headers, rows, "Rapor-Nilai-Saya", "Nilai Saya");
+                                    }}
+                                    className="p-4 rounded-3xl h-auto flex items-center gap-4 px-6 bg-card border border-border shadow-sm hover:bg-green-500/5 hover:border-green-500/30 hover:text-green-500 transition-all"
+                                >
+                                    <FileSpreadsheet className="h-6 w-6 opacity-60" />
+                                    <div className="text-left">
+                                        <p className="text-[10px] font-black uppercase tracking-widest opacity-80">Export</p>
+                                        <p className="text-sm font-black">Excel</p>
+                                    </div>
+                                </Button>
+                            </>
+                        )}
                     </motion.div>
                 </div>
 

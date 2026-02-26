@@ -20,8 +20,11 @@ import {
     Award,
     Bookmark,
     CheckCircle2,
-    AlertCircle
+    AlertCircle,
+    FileDown,
+    FileSpreadsheet
 } from "lucide-react";
+import { exportToPDF, exportToExcel } from "@/lib/export-utils";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -156,13 +159,47 @@ export default function MapelPage() {
                         <p className="text-muted-foreground font-medium">Daftar mata pelajaran yang tersedia di kurikulum.</p>
                     </div>
 
-                    <Button
-                        onClick={() => setIsAddOpen(true)}
-                        className="rounded-xl font-bold shadow-lg shadow-primary/20 gap-2 h-12 px-6"
-                    >
-                        <Plus className="h-5 w-5" />
-                        Tambah Mapel
-                    </Button>
+                    <div className="flex flex-wrap gap-2">
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                const columns = ["No", "Nama Mata Pelajaran", "Kategori"];
+                                const rows = (filteredMapel || []).map((m: any, i: number) => [
+                                    i + 1,
+                                    m.nama_mapel,
+                                    m.kategori || "Umum"
+                                ]);
+                                exportToPDF(columns, rows, "Daftar Mata Pelajaran", "Data-Mapel");
+                            }}
+                            className="rounded-xl font-bold gap-2 h-12 px-5 border-primary/20 hover:bg-red-500/5 hover:border-red-500/30 hover:text-red-500 transition-all"
+                        >
+                            <FileDown className="h-4 w-4" />
+                            PDF
+                        </Button>
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                const headers = ["No", "Nama Mata Pelajaran", "Kategori"];
+                                const rows = (filteredMapel || []).map((m: any, i: number) => [
+                                    i + 1,
+                                    m.nama_mapel,
+                                    m.kategori || "Umum"
+                                ]);
+                                exportToExcel(headers, rows, "Data-Mapel", "Mata Pelajaran");
+                            }}
+                            className="rounded-xl font-bold gap-2 h-12 px-5 border-primary/20 hover:bg-green-500/5 hover:border-green-500/30 hover:text-green-500 transition-all"
+                        >
+                            <FileSpreadsheet className="h-4 w-4" />
+                            Excel
+                        </Button>
+                        <Button
+                            onClick={() => setIsAddOpen(true)}
+                            className="rounded-xl font-bold shadow-lg shadow-primary/20 gap-2 h-12 px-6"
+                        >
+                            <Plus className="h-5 w-5" />
+                            Tambah Mapel
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Filters */}

@@ -19,8 +19,11 @@ import {
     Calendar,
     MapPin,
     Phone,
-    BookOpen
+    BookOpen,
+    FileDown,
+    FileSpreadsheet
 } from "lucide-react";
+import { exportToPDF, exportToExcel } from "@/lib/export-utils";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -185,13 +188,55 @@ export default function GuruPage() {
                         <p className="text-sm md:text-base text-muted-foreground font-medium">Manajemen tenaga pengajar di institusi.</p>
                     </div>
 
-                    <Button
-                        onClick={() => setIsAddOpen(true)}
-                        className="rounded-xl font-bold shadow-lg shadow-primary/20 gap-2 h-11 md:h-12 px-4 md:px-6 active:scale-95 transition-transform w-full sm:w-auto"
-                    >
-                        <Plus className="h-4 w-4 md:h-5 md:w-5" />
-                        Tambah Guru
-                    </Button>
+                    <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                const columns = ["No", "Nama", "NIP", "Jenis Kelamin", "Email", "No HP", "Wali Kelas"];
+                                const rows = (filteredGuru || []).map((g: any, i: number) => [
+                                    i + 1,
+                                    g.nama,
+                                    g.nip,
+                                    g.jenis_kelamin,
+                                    g.email || "-",
+                                    g.no_hp || "-",
+                                    g.id_kelas ? kelas?.find((k: any) => k.id_kelas === g.id_kelas)?.kelas || "-" : "Bukan Wali Kelas"
+                                ]);
+                                exportToPDF(columns, rows, "Daftar Guru", "Data-Guru");
+                            }}
+                            className="rounded-xl font-bold gap-2 h-11 md:h-12 px-4 md:px-5 border-primary/20 hover:bg-red-500/5 hover:border-red-500/30 hover:text-red-500 transition-all flex-1 sm:flex-none"
+                        >
+                            <FileDown className="h-4 w-4" />
+                            PDF
+                        </Button>
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                const headers = ["No", "Nama", "NIP", "Jenis Kelamin", "Email", "No HP", "Wali Kelas"];
+                                const rows = (filteredGuru || []).map((g: any, i: number) => [
+                                    i + 1,
+                                    g.nama,
+                                    g.nip,
+                                    g.jenis_kelamin,
+                                    g.email || "-",
+                                    g.no_hp || "-",
+                                    g.id_kelas ? kelas?.find((k: any) => k.id_kelas === g.id_kelas)?.kelas || "-" : "Bukan Wali Kelas"
+                                ]);
+                                exportToExcel(headers, rows, "Data-Guru", "Data Guru");
+                            }}
+                            className="rounded-xl font-bold gap-2 h-11 md:h-12 px-4 md:px-5 border-primary/20 hover:bg-green-500/5 hover:border-green-500/30 hover:text-green-500 transition-all flex-1 sm:flex-none"
+                        >
+                            <FileSpreadsheet className="h-4 w-4" />
+                            Excel
+                        </Button>
+                        <Button
+                            onClick={() => setIsAddOpen(true)}
+                            className="rounded-xl font-bold shadow-lg shadow-primary/20 gap-2 h-11 md:h-12 px-4 md:px-6 active:scale-95 transition-transform w-full sm:w-auto"
+                        >
+                            <Plus className="h-4 w-4 md:h-5 md:w-5" />
+                            Tambah Guru
+                        </Button>
+                    </div>
                 </div>
 
                 <div className="flex items-center gap-4 bg-card/30 backdrop-blur-md p-4 rounded-2xl border border-primary/5 shadow-sm">

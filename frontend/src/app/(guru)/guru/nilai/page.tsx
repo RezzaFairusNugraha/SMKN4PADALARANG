@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import DashboardLayout from "@/components/dashboard-layout";
-import { BookOpen, Search, Save, Loader2, GraduationCap, ChevronRight, Calculator } from "lucide-react";
+import { BookOpen, Search, Save, Loader2, GraduationCap, ChevronRight, Calculator, FileDown, FileSpreadsheet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,7 @@ import { apiClient } from "@/lib/api-client";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { exportToPDF, exportToExcel } from "@/lib/export-utils";
 
 // Type for our local grades state
 type GradeState = Record<number, { uts: number | string, uas: number | string }>;
@@ -174,7 +175,7 @@ export default function GuruNilaiPage() {
                                             <CardDescription className="text-xs md:text-sm font-bold text-primary">{selectedTeach.mapel_nama}</CardDescription>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-3 mt-4 md:mt-0">
+                                    <div className="flex items-center gap-3 mt-4 md:mt-0 flex-wrap">
                                         <div className="relative flex-1 md:flex-initial">
                                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                             <Input
@@ -184,6 +185,40 @@ export default function GuruNilaiPage() {
                                                 className="pl-9 h-10 w-full md:w-64 rounded-xl glass-input"
                                             />
                                         </div>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => {
+                                                const columns = ["No", "Nama Siswa", "NISN", "Nilai UTS", "Nilai UAS", "Nilai Akhir"];
+                                                const rows = selectedTeach.students.map((s: any, idx: number) => {
+                                                    const g = grades[s.id_siswa] || { uts: 0, uas: 0 };
+                                                    const final = Math.round(((g.uts === "" ? 0 : Number(g.uts)) + (g.uas === "" ? 0 : Number(g.uas))) / 2);
+                                                    return [idx + 1, s.nama, s.nisn, g.uts, g.uas, final];
+                                                });
+                                                exportToPDF(columns, rows, `Nilai ${selectedTeach.kelas_nama} - ${selectedTeach.mapel_nama}`, `Nilai-${selectedTeach.kelas_nama}-${selectedTeach.mapel_nama}`);
+                                            }}
+                                            className="h-10 rounded-xl font-bold gap-2 border-primary/20 hover:bg-red-500/5 hover:border-red-500/30 hover:text-red-500 transition-all"
+                                        >
+                                            <FileDown className="h-4 w-4" />
+                                            PDF
+                                        </Button>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => {
+                                                const headers = ["No", "Nama Siswa", "NISN", "Nilai UTS", "Nilai UAS", "Nilai Akhir"];
+                                                const rows = selectedTeach.students.map((s: any, idx: number) => {
+                                                    const g = grades[s.id_siswa] || { uts: 0, uas: 0 };
+                                                    const final = Math.round(((g.uts === "" ? 0 : Number(g.uts)) + (g.uas === "" ? 0 : Number(g.uas))) / 2);
+                                                    return [idx + 1, s.nama, s.nisn, g.uts, g.uas, final];
+                                                });
+                                                exportToExcel(headers, rows, `Nilai-${selectedTeach.kelas_nama}-${selectedTeach.mapel_nama}`, `Nilai ${selectedTeach.kelas_nama}`);
+                                            }}
+                                            className="h-10 rounded-xl font-bold gap-2 border-primary/20 hover:bg-green-500/5 hover:border-green-500/30 hover:text-green-500 transition-all"
+                                        >
+                                            <FileSpreadsheet className="h-4 w-4" />
+                                            Excel
+                                        </Button>
                                     </div>
                                 </div>
                             </CardHeader>
