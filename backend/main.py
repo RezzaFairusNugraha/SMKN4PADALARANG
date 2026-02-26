@@ -17,9 +17,14 @@ if not os.path.exists(os.path.join(uploads_dir, "berita")):
 
 app.mount("/api/uploads", StaticFiles(directory=uploads_dir), name="uploads")
 
+origins = [
+    "http://localhost:3000",
+    "https://smkn-4-padalarang.vercel.app",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
